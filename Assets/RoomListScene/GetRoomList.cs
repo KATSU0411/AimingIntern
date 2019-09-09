@@ -56,6 +56,9 @@ public class GetRoomList : MonoBehaviour
             GameObject button_join = panel.transform.Find("Button_Join").gameObject;
             GameObject text_owner = panel.transform.Find("Text_Owner").gameObject;
             GameObject text_status = panel.transform.Find("Text_Status").gameObject;
+
+            text_owner.GetComponent<Text>().text = "ルームオーナー：" + room.owner_name;
+            text_status.GetComponent<Text>().text = "状態：" + (room.status == "waiting" ? "対戦待ち" : "対戦中");
         }
     }
 }
