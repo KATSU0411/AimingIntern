@@ -97,7 +97,7 @@ public class Top : MonoBehaviour {
         ApiClient.Instance.SetAccessToken(response.access_token);
 
         // 情報保持
-        UserInfo.user_id = response.user_id;
+        UserInfo.user_session_id = response.user_session_id;
         UserInfo.token = response.access_token;
 
         // RoomListシーンに切り替え
