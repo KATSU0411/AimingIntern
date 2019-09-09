@@ -54,6 +54,7 @@ public class SignIn : MonoBehaviour {
     public void ResponseCreateUserSession(ResponseCreateUserSession response)
     {
         Debug.Log("Success");
+        ApiClient.Instance.SetAccessToken(response.access_token);
     }
 
 }
