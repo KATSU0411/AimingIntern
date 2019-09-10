@@ -11,3 +11,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/RoomListScene.unity
     guid: bc1c999e66b1a8248851162e9acf6e80
+  - enabled: 1
+    path: Assets/GameScene.unity
+    guid: d5c3e5b9f267a8f42bc1ffea8aff218c

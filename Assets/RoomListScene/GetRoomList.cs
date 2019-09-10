@@ -26,7 +26,7 @@ public class GetRoomList : MonoBehaviour
 
     }
 
-    public void Onclick()
+    public void OnClick()
     {
         // 現在のルーム全削除
         GameObject cont = GameObject.Find("Canvas/Panel/Scroll View_RoomList/Viewport/Content");
@@ -45,8 +45,6 @@ public class GetRoomList : MonoBehaviour
     // ----------------------------------------------------
     public void ResponseListRooms(ResponseListRooms response)
     {
-        Debug.Log(response.rooms);
-
         //Content取得(ボタンを並べる場所)
         RectTransform content = GameObject.Find("Canvas/Panel/Scroll View_RoomList/Viewport/Content")
                                             .GetComponent<RectTransform>();
