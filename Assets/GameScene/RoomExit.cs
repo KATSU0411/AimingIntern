@@ -6,17 +6,20 @@ using UnityEngine.SceneManagement;
 using HTTP;
 using Protocol;
 
-public class RoomExit : MonoBehaviour {
+public class RoomExit : MonoBehaviour
+{
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    // Use this for initialization
+    void Start()
+    {
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
 
     // ルームから退出
     public void OnClick()

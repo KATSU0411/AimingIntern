@@ -6,14 +6,16 @@ using UnityEngine.SceneManagement;
 using HTTP;
 using Protocol;
 
-public class Top : MonoBehaviour {
+public class Top : MonoBehaviour
+{
 
     private InputField server_field;
     private InputField username_field;
     private InputField passwd_field;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start()
+    {
         // 通信先アドレスのInputFieldを取得
         server_field = GameObject.Find("InputField_Server").GetComponent<InputField>();
 
@@ -22,12 +24,13 @@ public class Top : MonoBehaviour {
         passwd_field = GameObject.Find("InputField_Password").GetComponent<InputField>();
 
         server_field.text = "127.0.0.1:3000";
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
 
     public void SignUpOnClick()
     {
@@ -105,5 +108,5 @@ public class Top : MonoBehaviour {
         SceneManager.LoadScene("RoomListScene");
     }
 
-    
+
 }

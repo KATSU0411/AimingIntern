@@ -31,7 +31,7 @@ public class GetRoomList : MonoBehaviour
     {
         // 現在のルーム全削除
         GameObject cont = GameObject.Find("Canvas/Panel/Scroll View_RoomList/Viewport/Content");
-        foreach(Transform t in cont.transform)
+        foreach (Transform t in cont.transform)
         {
             Destroy(t.gameObject);
         }

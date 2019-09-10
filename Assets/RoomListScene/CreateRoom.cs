@@ -6,17 +6,20 @@ using UnityEngine.SceneManagement;
 using HTTP;
 using Protocol;
 
-public class CreateRoom : MonoBehaviour {
+public class CreateRoom : MonoBehaviour
+{
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    // Use this for initialization
+    void Start()
+    {
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
 
     // ルームを作成
     public void OnClick()

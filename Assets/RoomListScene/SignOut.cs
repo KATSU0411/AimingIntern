@@ -5,17 +5,20 @@ using UnityEngine.SceneManagement;
 using HTTP;
 using Protocol;
 
-public class SignOut : MonoBehaviour {
+public class SignOut : MonoBehaviour
+{
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    // Use this for initialization
+    void Start()
+    {
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
     public void OnClick()
     {
         var session = new RequestDeleteUserSession();
