@@ -34,7 +34,7 @@ public class GetRoomList : MonoBehaviour
         Debug.Log(response.rooms);
 
         //Content取得(ボタンを並べる場所)
-        RectTransform content = GameObject.Find("Canvas/Scroll View_RoomList/Viewport/Content")
+        RectTransform content = GameObject.Find("Canvas/Panel/Scroll View_RoomList/Viewport/Content")
                                             .GetComponent<RectTransform>();
 
         //Contentの高さ決定
@@ -57,8 +57,8 @@ public class GetRoomList : MonoBehaviour
             GameObject text_owner = panel.transform.Find("Text_Owner").gameObject;
             GameObject text_status = panel.transform.Find("Text_Status").gameObject;
 
-            text_owner.GetComponent<Text>().text = "ルームオーナー：" + room.owner_name;
-            text_status.GetComponent<Text>().text = "状態：" + (room.status == "waiting" ? "対戦待ち" : "対戦中");
+            text_owner.GetComponent<Text>().text = room.owner_name;
+            text_status.GetComponent<Text>().text = (room.status == "waiting" ? "対戦待ち" : "対戦中");
         }
     }
 }
