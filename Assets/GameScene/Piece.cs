@@ -12,15 +12,30 @@ public class Piece : MonoBehaviour {
     private GameObject draggingObject;
     private Transform canvasTran;
 
+    public int position_x { set; get; }
+    public int position_y { set; get; }
+    private float PIECE_SIZE;
+
 	// Use this for initialization
 	void Start () {
         canvasTran = transform.parent.parent.parent.parent;
+
+        var field = GameObject.Find("Canvas/Panel/Image_field/Panel_piece");
+        var field_rect = field.GetComponent<RectTransform>();
+        // 1コマ当たりのサイズ
+        PIECE_SIZE = field_rect.rect.width / 6.0f;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-
+        this.gameObject.GetComponent<RectTransform>().localPosition = FieldPos(position_x, position_y);
 	}
+
+    // フィールドの座標をUIの座標に変換
+    private Vector2 FieldPos(int x, int y)
+    {
+        return new Vector2(PIECE_SIZE * (x - 1), PIECE_SIZE * (y-1));
+    }
 
     // コマのドラッグイベント
      public void OnBeginDrag(BaseEventData ev)
@@ -32,18 +47,27 @@ public class Piece : MonoBehaviour {
     public void OnDrag(BaseEventData ev)
     {
         PointerEventData e = (PointerEventData)ev;
-        this.gameObject.GetComponent<RectTransform>().position += new Vector3(e.delta.x, e.delta.y, 0.0f);
+        draggingObject.transform.position = e.position;
     }
      public void OnEndDrag(BaseEventData ev)
     {
         PointerEventData e = (PointerEventData)ev;
         gameObject.GetComponent<Image>().color = Vector4.one;
         Destroy(draggingObject);
+        if (e.pointerEnter == null) return;
+
+        // ドラッグ先と位置を交換
+        Piece swapper = e.pointerEnter.GetComponent<Piece>();
+        int tmp;
+        tmp = swapper.position_x;
+        swapper.position_x = position_x;
+        position_x = tmp;
+        tmp = swapper.position_y;
+        swapper.position_y = position_y;
+        position_y = tmp;
     }
 
-
-
-
+    // ドラッグ中マウスオーバーでハイライト
     public void OnPointerEnter(BaseEventData ev)
     {
         PointerEventData e = (PointerEventData)ev;

@@ -90,6 +90,13 @@ public class GameMain : MonoBehaviour
 
         Pieces.Add(p);
 
+        // =================================================================
+        // ここ！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
+        Piece p1 = piece.GetComponent<Piece>();
+        p1.position_x = x;
+        p1.position_y = y;
+        // =================================================================
+
         return piece;
     }
 
