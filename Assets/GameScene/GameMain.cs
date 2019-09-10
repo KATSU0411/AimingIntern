@@ -56,15 +56,15 @@ public class GameMain : MonoBehaviour
     {
         for (int i = 0; i < 4; i++)
         {
-            InitPiece(true, i + 2, 5);
-            InitPiece(false, i + 2, 6);
+            InitPiece(true, i + 2, 1);
+            InitPiece(false, i + 2, 2);
         }
     }
 
     // フィールドの座標をUIの座標に変換
     private Vector2 FieldPos(int x, int y)
     {
-        return new Vector2(PIECE_SIZE * (x - 1) - (PIECE_SIZE * 3), -PIECE_SIZE * (y) + (PIECE_SIZE * 3));
+        return new Vector2(PIECE_SIZE * (x - 1), PIECE_SIZE * (y-1));
     }
 
     // コマの設置

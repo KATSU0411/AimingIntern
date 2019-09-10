@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 using HTTP;
 using Protocol;
 
-public class FieldHighlight : MonoBehaviour {
+public class FieldHighlight : MonoBehaviour , IBeginDragHandler, IDragHandler, IEndDragHandler{
 
 	// Use this for initialization
 	void Start () {
@@ -18,6 +18,18 @@ public class FieldHighlight : MonoBehaviour {
 	void Update () {
 
 	}
+
+    // コマのドラッグイベント
+     public void OnBeginDrag(PointerEventData e)
+    {
+        Debug.Log(e.position.x);
+    }
+    public void OnDrag(PointerEventData ev)
+    {
+    }
+     public void OnEndDrag(PointerEventData ev)
+    {
+    }
 
 
 }
