@@ -26,6 +26,20 @@ public class GetRoomList : MonoBehaviour
 
     }
 
+    public void Onclick()
+    {
+        // 現在のルーム全削除
+        GameObject cont = GameObject.Find("Canvas/Panel/Scroll View_RoomList/Viewport/Content");
+        foreach(Transform t in cont.transform)
+        {
+            GameObject.Destroy(t.gameObject);
+        }
+
+        ApiClient.Instance.ResponseListRooms = ResponseListRooms;
+        var param = new RequestListRooms();
+        ApiClient.Instance.RequestListRooms(param);
+    }
+
     // ----------------------------------------------------
     // ログインセッション生成コールバック関数
     // ----------------------------------------------------
