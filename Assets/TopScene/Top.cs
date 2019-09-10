@@ -32,8 +32,6 @@ public class Top : MonoBehaviour {
     public void SignUpOnClick()
     {
         CreateNewUser();
-        // 登録後サインイン
-        CreateUserSession();
     }
     public void SignInOnClick()
     {
@@ -66,6 +64,9 @@ public class Top : MonoBehaviour {
     public void ResponseCreateUser(ResponseCreateUser response)
     {
         Debug.Log("Success");
+
+        // 登録後サインイン
+        CreateUserSession();
     }
 
     // ----------------------------------------------------

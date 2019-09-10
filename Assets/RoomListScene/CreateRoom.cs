@@ -17,6 +17,8 @@ public class CreateRoom : MonoBehaviour {
 	void Update () {
 		
 	}
+
+    // ルームを作成
     public void OnClick()
     {
         ApiClient.Instance.ResponseCreateRoom = ResponseCreateRoom;
@@ -26,8 +28,9 @@ public class CreateRoom : MonoBehaviour {
 
     public void ResponseCreateRoom(ResponseCreateRoom response)
     {
-        // roomid保持
+        // 情報保持
         UserInfo.room_id = response.room_id;
+        UserInfo.player_entory_id = response.player_entry_id;
 
         // Gameシーン切り替え
         SceneManager.LoadScene("GameScene");
