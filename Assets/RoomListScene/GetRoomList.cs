@@ -72,6 +72,33 @@ public class GetRoomList : MonoBehaviour
 
             text_owner.GetComponent<Text>().text = room.owner_name;
             text_status.GetComponent<Text>().text = (room.status == "waiting" ? "対戦待ち" : "対戦中");
+
+            // 対戦中なら対戦ボタンが使用不可
+            button_join.GetComponent<Button>().interactable = (room.status == "waiting" ? true : false);
+
+            // 入場機能
+            button_join.GetComponent<Button>().onClick.AddListener(() => JoinRoom(room.room_id));
         }
+    }
+
+    // ----------------------------------------------------
+    // ルームに入る
+    // ----------------------------------------------------
+    public void JoinRoom(int room_id)
+    {
+        ApiClient.Instance.ResponseCreatePlayerEntry = ResponseCreatePlayerEntry;
+        var param = new RequestCreatePlayerEntry();
+        param.room_id = room_id;
+        ApiClient.Instance.RequestCreatePlayerEntry(param);
+    }
+
+    public void ResponseCreatePlayerEntry(ResponseCreatePlayerEntry response)
+    {
+        // 情報保持
+        UserInfo.room_id = response.room_id;
+        UserInfo.player_entory_id = response.player_entry_id;
+
+        // Gameシーン切り替え
+        SceneManager.LoadScene("GameScene");
     }
 }

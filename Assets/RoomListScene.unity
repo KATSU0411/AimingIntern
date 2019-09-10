@@ -276,7 +276,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 207768314}
-        m_MethodName: Onclick
+        m_MethodName: OnClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1366,10 +1366,10 @@ MonoBehaviour:
   m_Padding:
     m_Left: 40
     m_Right: 40
-    m_Top: 40
-    m_Bottom: 20
+    m_Top: 0
+    m_Bottom: 0
   m_ChildAlignment: 1
-  m_Spacing: 40
+  m_Spacing: 20
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
