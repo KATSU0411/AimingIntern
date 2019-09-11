@@ -123,8 +123,6 @@ public class Piece : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
         if (flgFirst) { if (((x == 0 || x == 7) && (y != 6))) return false; }
         else { if (((x == 0 || x == 7) && (y != 1))) return false; }
 
-        return true;
-
         PieceInfo dstinfo = field.GetComponent<GameMain>().isPiece(x, y);
         if (dstinfo != null && dstinfo.owner_user_id == UserInfo.user_id) return false;
 

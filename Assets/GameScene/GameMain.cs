@@ -42,6 +42,7 @@ public class GameMain : MonoBehaviour
         field_rect = field.GetComponent<RectTransform>();
         Pieces = new GameObject[PIECE_NUM];
         waiting = GameObject.Find("Canvas/Panel/Image_wait");
+        GameObject.Find("Canvas/Panel/Button").SetActive(false);
 
 
         GetRoomInfo();
@@ -181,6 +182,7 @@ public class GameMain : MonoBehaviour
         {
             m_flgMatched = true;
             waiting.SetActive(false);
+            GameObject.Find("Canvas/Panel/Button").SetActive(true);
             InitPieces();
             return;
         }
