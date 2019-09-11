@@ -11,6 +11,7 @@ public class GameMain : MonoBehaviour
 {
     private float m_time_elapsed = 0;
     private bool m_flgMatched = false;
+    private bool m_flgStart = false;
 
     private GameObject GoodPiece;
     private GameObject EvilPiece;
@@ -18,12 +19,14 @@ public class GameMain : MonoBehaviour
     private GameObject field;
     private RectTransform field_rect;
 
-    private bool m_flgFirst = false;
+    private bool m_flgFirst;
 
     // Use this for initialization
     void Start()
     {
-        //GetRoomInfo();
+        m_flgMatched = false;
+        m_flgStart = false;
+        GetRoomInfo();
         GoodPiece = (GameObject)Resources.Load("GoodPrefab");
         EvilPiece = (GameObject)Resources.Load("EvilPrefab");
         UnknownPiece = (GameObject)Resources.Load("UnknownPrefab");
@@ -32,19 +35,20 @@ public class GameMain : MonoBehaviour
 
 
         // Debug
-        InitPieces();
+        //InitPieces();
     }
 
 
     // Update is called once per frame
     void Update()
     {
-        //m_time_elapsed += Time.deltaTime;
-        //if(m_time_elapsed >= 2)
-        //{
-        //    GetGameInfo();
-        //    GetRoomInfo();
-        //}
+        m_time_elapsed += Time.deltaTime;
+        if (m_time_elapsed >= 2)
+        {
+            if (!m_flgMatched) GetRoomInfo();
+            else GetGameInfo();
+            m_time_elapsed = 0;
+        }
     }
 
     // ------------------------------------------------
@@ -83,14 +87,15 @@ public class GameMain : MonoBehaviour
         piece.transform.SetParent(field_rect, false);
 
         // 座標の指定
-        Piece p1 = piece.GetComponent<Piece>();
-        p1.position_x = x;
-        p1.position_y = y;
-        p1.flgFirst = m_flgFirst;
-        p1.kind = kind;
+        Piece p = piece.GetComponent<Piece>();
+        p.info.point_x = x;
+        p.info.point_y = y;
+        p.info.kind = kind;
+        p.flgFirst = m_flgFirst;
 
         return piece;
     }
+
 
     // ------------------------------------------------
     // Game情報取得
@@ -104,9 +109,31 @@ public class GameMain : MonoBehaviour
     }
     public void ResponseShowGame(ResponseShowGame response)
     {
-        if(response.first_mover_user_id == UserInfo.user_id)
+        // 先手後手格納
+        if (response.first_mover_user_id == UserInfo.user_id)
         {
             m_flgFirst = true;
+        }
+        else
+        {
+            m_flgFirst = false;
+        }
+        if (!m_flgMatched)
+        {
+            m_flgMatched = true;
+            InitPieces();
+        }
+
+        UserInfo.game_status = response.status;
+
+        // 自ターンか判定
+        if(response.turn_mover_user_id == UserInfo.user_id)
+        {
+            UserInfo.flg_turn = true;
+        }
+        else
+        {
+            UserInfo.flg_turn = false;
         }
     }
 
@@ -128,8 +155,8 @@ public class GameMain : MonoBehaviour
 
         if (response.status == "playing" && !m_flgMatched)
         {
-            m_flgMatched = true;
-            InitPieces();
+            GetGameInfo();
         }
     }
+
 }

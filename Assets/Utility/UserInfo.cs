@@ -10,4 +10,6 @@ public class UserInfo : MonoBehaviour
     public static int room_id { set; get; }
     public static int player_entory_id { set; get; }
     public static int game_id { set; get; }
+    public static string game_status { set; get; }
+    public static bool flg_turn { set; get; }
 }
