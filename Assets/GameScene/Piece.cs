@@ -14,7 +14,11 @@ public class Piece : MonoBehaviour {
 
     public int position_x { set; get; }
     public int position_y { set; get; }
+    public bool flgFirst { set; get; }
     private float PIECE_SIZE;
+    public int piece_id { set; get; }
+    public string kind { set; get; }
+
 
 	// Use this for initialization
 	void Start () {
@@ -24,6 +28,8 @@ public class Piece : MonoBehaviour {
         var field_rect = field.GetComponent<RectTransform>();
         // 1コマ当たりのサイズ
         PIECE_SIZE = field_rect.rect.width / 6.0f;
+
+        this.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(PIECE_SIZE, PIECE_SIZE);
 	}
 	
 	// Update is called once per frame
@@ -34,7 +40,8 @@ public class Piece : MonoBehaviour {
     // フィールドの座標をUIの座標に変換
     private Vector2 FieldPos(int x, int y)
     {
-        return new Vector2(PIECE_SIZE * (x - 1), PIECE_SIZE * (y-1));
+        if (flgFirst) return new Vector2(PIECE_SIZE * (x - 1), PIECE_SIZE * (y - 1));
+        else return new Vector2(PIECE_SIZE * (x - 1), PIECE_SIZE * (7 - y - 1));
     }
 
     // コマのドラッグイベント

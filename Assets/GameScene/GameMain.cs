@@ -18,9 +18,7 @@ public class GameMain : MonoBehaviour
     private GameObject field;
     private RectTransform field_rect;
 
-    private float PIECE_SIZE;
-
-    private List<PieceInfo> Pieces;
+    private bool m_flgFirst = false;
 
     // Use this for initialization
     void Start()
@@ -31,11 +29,9 @@ public class GameMain : MonoBehaviour
         UnknownPiece = (GameObject)Resources.Load("UnknownPrefab");
         field = GameObject.Find("Canvas/Panel/Image_field/Panel_piece");
         field_rect = field.GetComponent<RectTransform>();
-        // 1コマ当たりのサイズ
-        PIECE_SIZE = field_rect.rect.width / 6.0f;
 
-        Pieces = new List<PieceInfo>();
 
+        // Debug
         InitPieces();
     }
 
@@ -51,24 +47,30 @@ public class GameMain : MonoBehaviour
         //}
     }
 
+    // ------------------------------------------------
     // 初期コマ8つの設置
+    // ------------------------------------------------
     void InitPieces()
     {
         for (int i = 0; i < 4; i++)
         {
-            InitPiece("good", i + 2, 1);
-            InitPiece("evil", i + 2, 2);
+            if (m_flgFirst)
+            {
+                SetPiece("good", i + 2, 1);
+                SetPiece("evil", i + 2, 2);
+            }
+            else
+            {
+                SetPiece("good", i + 2, 5);
+                SetPiece("evil", i + 2, 6);
+            }
         }
     }
 
-    // フィールドの座標をUIの座標に変換
-    private Vector2 FieldPos(int x, int y)
-    {
-        return new Vector2(PIECE_SIZE * (x - 1), PIECE_SIZE * (y-1));
-    }
-
+    // ------------------------------------------------
     // コマの設置
-    private GameObject InitPiece(string kind, int x, int y)
+    // ------------------------------------------------
+    private GameObject SetPiece(string kind, int x, int y)
     {
         GameObject piece;
 
@@ -81,28 +83,20 @@ public class GameMain : MonoBehaviour
         piece.transform.SetParent(field_rect, false);
 
         // 座標の指定
-        RectTransform piece_rect = piece.GetComponent<RectTransform>();
-        piece_rect.sizeDelta = new Vector2(PIECE_SIZE, PIECE_SIZE);
-        piece_rect.localPosition = FieldPos(x, y);
-
-        var p = new PieceInfo();
-        p.point_x = x;
-        p.point_y = y;
-        p.kind = kind;
-
-        Pieces.Add(p);
-
         Piece p1 = piece.GetComponent<Piece>();
         p1.position_x = x;
         p1.position_y = y;
+        p1.flgFirst = m_flgFirst;
+        p1.kind = kind;
 
         return piece;
     }
 
+    // ------------------------------------------------
     // Game情報取得
+    // ------------------------------------------------
     void GetGameInfo()
     {
-
         ApiClient.Instance.ResponseShowGame = ResponseShowGame;
         var param = new RequestShowGame();
         param.game_id = UserInfo.game_id;
@@ -110,10 +104,16 @@ public class GameMain : MonoBehaviour
     }
     public void ResponseShowGame(ResponseShowGame response)
     {
+        if(response.first_mover_user_id == UserInfo.user_id)
+        {
+            m_flgFirst = true;
+        }
     }
 
 
+    // ------------------------------------------------
     // Room情報取得
+    // ------------------------------------------------
     void GetRoomInfo()
     {
         ApiClient.Instance.ResponseShowRoom = ResponseShowRoom;
@@ -128,6 +128,7 @@ public class GameMain : MonoBehaviour
 
         if (response.status == "playing" && !m_flgMatched)
         {
+            m_flgMatched = true;
             InitPieces();
         }
     }

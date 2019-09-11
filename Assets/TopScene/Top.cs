@@ -103,6 +103,7 @@ public class Top : MonoBehaviour
         // 情報保持
         UserInfo.user_session_id = response.user_session_id;
         UserInfo.token = response.access_token;
+        UserInfo.user_id = response.user_id;
 
         // RoomListシーンに切り替え
         SceneManager.LoadScene("RoomListScene");
