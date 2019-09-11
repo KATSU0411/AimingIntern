@@ -19,6 +19,8 @@ public class GameMain : MonoBehaviour
     private GameObject UnknownPiece;
     private GameObject field;
     private RectTransform field_rect;
+    private RectTransform my_case;
+    private RectTransform enemy_case;
     private GameObject waiting;
 
     private GameObject[] Pieces;
@@ -43,6 +45,9 @@ public class GameMain : MonoBehaviour
         Pieces = new GameObject[PIECE_NUM];
         waiting = GameObject.Find("Canvas/Panel/Image_wait");
         GameObject.Find("Canvas/Panel/Button").SetActive(false);
+
+        my_case = GameObject.Find("Canvas/Panel/Image_case_my").GetComponent<RectTransform>();
+        enemy_case = GameObject.Find("Canvas/Panel/Image_case_en").GetComponent<RectTransform>();
 
 
         GetRoomInfo();
@@ -105,14 +110,19 @@ public class GameMain : MonoBehaviour
     // ------------------------------------------------
     private GameObject SetPiece(string kind, int x, int y)
     {
+
         PieceInfo info = new PieceInfo();
         info.point_y = y;
         info.point_x = x;
         info.kind = kind;
 
-        return SetPiece(info);
+        return SetPiece(info, field_rect);
     }
     private GameObject SetPiece(PieceInfo info)
+    {
+        return SetPiece(info, field_rect);
+    }
+    private GameObject SetPiece(PieceInfo info, RectTransform parent)
     {
         GameObject piece;
 
@@ -122,7 +132,7 @@ public class GameMain : MonoBehaviour
         else return null;
 
         // 子要素として追加
-        piece.transform.SetParent(field_rect, false);
+        piece.transform.SetParent(parent, false);
 
         // 座標の指定
         Piece p = piece.GetComponent<Piece>();
@@ -153,7 +163,22 @@ public class GameMain : MonoBehaviour
 
         for(int i=0;i<PIECE_NUM;i++)
         {
-            Pieces[i].GetComponent<Piece>().info = response.pieces[i];
+            if(Pieces[i].GetComponent<Piece>().info.captured != response.pieces[i].captured)
+            {
+                Destroy(Pieces[i]);
+                if(response.pieces[i].owner_user_id == UserInfo.user_id)
+                {
+                    Pieces[i] = SetPiece(response.pieces[i], enemy_case);
+                }
+                else
+                {
+                    Pieces[i] = SetPiece(response.pieces[i], my_case);
+                }
+            }
+            else
+            {
+                Pieces[i].GetComponent<Piece>().info = response.pieces[i];
+            }
         }
     }
 
@@ -225,6 +250,8 @@ public class GameMain : MonoBehaviour
         for(int i=0; i<PIECE_NUM; i++)
         {
             PieceInfo info = Pieces[i].GetComponent<Piece>().info;
+            if (info.captured) continue;
+
             if(info.point_x == x && info.point_y == y)
             {
                 return info; 
