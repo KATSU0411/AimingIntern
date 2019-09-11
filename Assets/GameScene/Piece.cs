@@ -18,7 +18,7 @@ public class Piece : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        canvasTran = transform.parent.parent.parent.parent;
+        canvasTran = GameObject.Find("Canvas/Panel").GetComponent<Transform>();
 
         var field = GameObject.Find("Canvas/Panel/Image_field/Panel_piece");
         var field_rect = field.GetComponent<RectTransform>();
@@ -54,17 +54,26 @@ public class Piece : MonoBehaviour {
         PointerEventData e = (PointerEventData)ev;
         gameObject.GetComponent<Image>().color = Vector4.one;
         Destroy(draggingObject);
-        if (e.pointerEnter == null) return;
 
-        // ドラッグ先と位置を交換
-        Piece swapper = e.pointerEnter.GetComponent<Piece>();
-        int tmp;
-        tmp = swapper.position_x;
-        swapper.position_x = position_x;
-        position_x = tmp;
-        tmp = swapper.position_y;
-        swapper.position_y = position_y;
-        position_y = tmp;
+        var raycastResluts = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(e, raycastResluts);
+
+        foreach(var obj in raycastResluts)
+        {
+            if(obj.gameObject.tag == "Piece")
+            {
+                // ドラッグ先と位置を交換
+                Piece swapper = obj.gameObject.GetComponent<Piece>();
+                int tmp;
+                tmp = swapper.position_x;
+                swapper.position_x = position_x;
+                position_x = tmp;
+                tmp = swapper.position_y;
+                swapper.position_y = position_y;
+                position_y = tmp;
+            }
+        }
+
     }
 
     // ドラッグ中マウスオーバーでハイライト

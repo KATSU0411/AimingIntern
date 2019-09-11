@@ -56,8 +56,8 @@ public class GameMain : MonoBehaviour
     {
         for (int i = 0; i < 4; i++)
         {
-            InitPiece(true, i + 2, 1);
-            InitPiece(false, i + 2, 2);
+            InitPiece("good", i + 2, 1);
+            InitPiece("evil", i + 2, 2);
         }
     }
 
@@ -68,12 +68,14 @@ public class GameMain : MonoBehaviour
     }
 
     // コマの設置
-    private GameObject InitPiece(bool flgGood, int x, int y)
+    private GameObject InitPiece(string kind, int x, int y)
     {
         GameObject piece;
 
-        if (flgGood) piece = Instantiate(GoodPiece);
-        else piece = Instantiate(EvilPiece);
+        if (kind == "good") piece = Instantiate(GoodPiece);
+        else if (kind == "evil") piece = Instantiate(EvilPiece);
+        else if (kind == "unknown") piece = Instantiate(UnknownPiece);
+        else return null;
 
         // 子要素として追加
         piece.transform.SetParent(field_rect, false);
@@ -86,16 +88,13 @@ public class GameMain : MonoBehaviour
         var p = new PieceInfo();
         p.point_x = x;
         p.point_y = y;
-        p.kind = (flgGood ? "good" : "evil");
+        p.kind = kind;
 
         Pieces.Add(p);
 
-        // =================================================================
-        // ここ！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
         Piece p1 = piece.GetComponent<Piece>();
         p1.position_x = x;
         p1.position_y = y;
-        // =================================================================
 
         return piece;
     }
