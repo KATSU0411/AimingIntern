@@ -22,6 +22,8 @@ public class Piece : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
     private GameObject field;
     private RectTransform field_rect;
 
+    private float CANVAS_SCALE;
+
 
     void Awake()
     {
@@ -37,6 +39,9 @@ public class Piece : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
         field_rect = field.GetComponent<RectTransform>();
         // 1コマ当たりのサイズ
         PIECE_SIZE = field_rect.rect.width / 6.0f;
+        //Debug.Log(field_rect.position);
+
+        CANVAS_SCALE = GameObject.Find("Canvas").GetComponent<RectTransform>().localScale.x;
 
         this.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(PIECE_SIZE, PIECE_SIZE);
 
@@ -52,9 +57,9 @@ public class Piece : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
     private Vector2 Field2UI(int x, int y)
     {
         if (flgFirst) return new Vector2(PIECE_SIZE * (x - 1), PIECE_SIZE * (y - 1));
-        else return new Vector2(PIECE_SIZE * (x - 1), PIECE_SIZE * (7 - y - 1));
+        else return new Vector2(PIECE_SIZE * (7 - x - 1), PIECE_SIZE * (7 - y - 1));
     }
-    
+
     // マウス座標をフィールド座標に変換
     private Vector2 Mouse2Field(PointerEventData e)
     {
@@ -63,9 +68,13 @@ public class Piece : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
         x -= field_rect.position.x;
         y -= field_rect.position.y;
 
+        x /= CANVAS_SCALE;
+        y /= CANVAS_SCALE;
+
+
         Vector2 pos = new Vector2((int)(x / PIECE_SIZE) + 1, (int)(y / PIECE_SIZE) + 1);
         if (flgFirst) return pos;
-        else return new Vector2(pos.x, 7 - pos.y);
+        else return new Vector2(7 - pos.x, 7 - pos.y);
     }
 
     // コマのドラッグイベント
@@ -87,15 +96,17 @@ public class Piece : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
         Destroy(draggingObject);
 
         var pos = Mouse2Field(e);
-        Debug.Log(pos);
 
         if (UserInfo.game_status == "preparing")
         {
             SwapPiece(e);
         }
-        else if(UserInfo.flg_turn)
+        else if (UserInfo.flg_turn)
         {
-            MovePiece(Mouse2Field(e));
+            if (MovePiece(Mouse2Field(e)))
+            {
+                UpdatePieceInfo();
+            }
         }
     }
 
@@ -103,19 +114,34 @@ public class Piece : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
     // ------------------------------------------------
     // コマの移動
     // ------------------------------------------------
-    private void MovePiece(Vector2 pos)
+    private bool MovePiece(Vector2 pos)
     {
-        if(pos.x == info.point_x)
-        {
-            if(Math.Abs(pos.y - info.point_y) == 1)
-            {
+        int x = (int)pos.x;
+        int y = (int)pos.y;
+        if (y < 1 || y > 6) return false;
+        if (x < 0 || x > 7) return false;
+        if (flgFirst) { if (((x == 0 || x == 7) && (y != 6))) return false; }
+        else { if (((x == 0 || x == 7) && (y != 1))) return false; }
 
-            }
-        }
-        else if(pos.y == info.point_y)
-        {
+        return true;
 
+        PieceInfo dstinfo = field.GetComponent<GameMain>().isPiece(x, y);
+        if (dstinfo != null && dstinfo.owner_user_id == UserInfo.user_id) return false;
+
+        if (x == info.point_x)
+        {
+            if (Math.Abs(y - info.point_y) != 1) return false;
+            info.point_y = y;
+            return true;
         }
+        else if (y == info.point_y)
+        {
+            if (Math.Abs(x - info.point_x) != 1) return false;
+            info.point_x = x;
+            return true;
+        }
+
+        return false;
     }
 
     // ------------------------------------------------
@@ -183,4 +209,21 @@ public class Piece : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
         gameObject.GetComponent<Image>().color = Vector4.one * 0.6f;
     }
 
+    // ------------------------------------------------
+    // コマの移動をサーバに送信
+    // ------------------------------------------------
+    void UpdatePieceInfo()
+    {
+        ApiClient.Instance.ResponseUpdatePiece = ResponseUpdatePiece;
+        var param = new RequestUpdatePiece();
+        param.piece_id = info.piece_id;
+        param.point_y = info.point_y;
+        param.point_x = info.point_x;
+
+        ApiClient.Instance.RequestUpdatePiece(param);
+    }
+    public void ResponseUpdatePiece(ResponseUpdatePiece response)
+    {
+
+    }
 }

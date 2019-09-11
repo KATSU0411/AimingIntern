@@ -29,7 +29,6 @@ public class PostPreparation : MonoBehaviour
     public void OnPointerClick()
     {
         PostInitPieces();
-        //GetPieceInfo();
     }
 
     // ------------------------------------------------
@@ -47,7 +46,6 @@ public class PostPreparation : MonoBehaviour
             pi = p.info;
 
             pieces.Add(pi);
-            Debug.LogWarningFormat("x = {0}, y={1}, kind={2}", pi.point_x, pi.point_y, pi.kind);
         }
 
         return pieces;
@@ -80,6 +78,7 @@ public class PostPreparation : MonoBehaviour
 
     public void ResponsePrepareGame(ResponsePrepareGame response)
     {
-
+        GameObject.Find("Canvas/Panel/Image_wait").SetActive(true);
+        Destroy(this.gameObject);
     }
 }
