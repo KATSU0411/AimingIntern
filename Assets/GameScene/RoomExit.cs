@@ -32,6 +32,10 @@ public class RoomExit : MonoBehaviour
 
     public void ResponseDeletePlayerEntry(ResponseDeletePlayerEntry response)
     {
+        UserInfo.game_status = null;
+        UserInfo.flg_turn = false;
+
+
         // シーン切り替え
         SceneManager.LoadScene("RoomListScene");
     }

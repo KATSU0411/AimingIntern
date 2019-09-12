@@ -10,10 +10,12 @@ public class GetRoomList : MonoBehaviour
 {
 
     private GameObject RoomPanel;
+    public int filter; // 0:all 1:playing only 2:waiting only
 
     // Use this for initialization
     void Start()
     {
+        filter = 0;
         ApiClient.Instance.ResponseListRooms = ResponseListRooms;
         var param = new RequestListRooms();
         ApiClient.Instance.RequestListRooms(param);
@@ -29,12 +31,6 @@ public class GetRoomList : MonoBehaviour
     // ルーム更新
     public void OnClick()
     {
-        // 現在のルーム全削除
-        GameObject cont = GameObject.Find("Canvas/Panel/Scroll View_RoomList/Viewport/Content");
-        foreach (Transform t in cont.transform)
-        {
-            Destroy(t.gameObject);
-        }
 
         ApiClient.Instance.ResponseListRooms = ResponseListRooms;
         var param = new RequestListRooms();
@@ -47,8 +43,14 @@ public class GetRoomList : MonoBehaviour
     public void ResponseListRooms(ResponseListRooms response)
     {
         //Content取得(ボタンを並べる場所)
-        RectTransform content = GameObject.Find("Canvas/Panel/Scroll View_RoomList/Viewport/Content")
-                                            .GetComponent<RectTransform>();
+        GameObject cont = GameObject.Find("Canvas/Panel/Scroll View_RoomList/Viewport/Content");
+        RectTransform content = cont.GetComponent<RectTransform>();
+
+        // 現在のルーム全削除
+        foreach (Transform t in cont.transform)
+        {
+            Destroy(t.gameObject);
+        }
 
         //Contentの高さ決定
         //(RoomPanelの高さ+間隔)*Room数
@@ -59,11 +61,11 @@ public class GetRoomList : MonoBehaviour
 
         foreach (RoomInfo room in response.rooms)
         {
+            if (filter == 1 && room.status != "playing") continue;
+            if (filter == 2 && room.status != "waiting") continue;
             //RoomPanel
             GameObject panel = Instantiate(RoomPanel);
 
-            //ボタンをContentの子に設定
-            panel.transform.SetParent(content, false);
 
             //各子要素の設定
             GameObject button_join = panel.transform.Find("Button_Join").gameObject;
@@ -78,6 +80,9 @@ public class GetRoomList : MonoBehaviour
 
             // 入場機能
             button_join.GetComponent<Button>().onClick.AddListener(() => JoinRoom(room.room_id));
+
+            //ボタンをContentの子に設定
+            panel.transform.SetParent(content, false);
         }
     }
 
