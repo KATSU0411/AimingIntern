@@ -108,6 +108,4 @@ public class Top : MonoBehaviour
         // RoomListシーンに切り替え
         SceneManager.LoadScene("RoomListScene");
     }
-
-
 }

@@ -92,7 +92,7 @@ namespace Network{
 		IEnumerator GetRequest(string url){
 			var requester = CreateRequester(url, UnityWebRequest.kHttpVerbGET);
 
-			yield return requester.Send();
+			yield return requester.SendWebRequest();
 
 			ResponseProcess (requester);
 		}
@@ -108,7 +108,7 @@ namespace Network{
 		IEnumerator PostRequest(string url,string sendData){
 			var requester = CreateRequester(url,UnityWebRequest.kHttpVerbPOST,sendData);
 
-			yield return requester.Send ();
+			yield return requester.SendWebRequest();
 
 			ResponseProcess (requester);
 		}
@@ -124,7 +124,7 @@ namespace Network{
 		IEnumerator DeleteRequest(string url,string sendData){
 			var requester = CreateRequester(url,UnityWebRequest.kHttpVerbDELETE,sendData);
 
-			yield return requester.Send ();
+			yield return requester.SendWebRequest();
 
 			ResponseProcess (requester);
 		}
@@ -140,7 +140,7 @@ namespace Network{
 		IEnumerator PutRequest(string url,string sendData){
 			var requester = CreateRequester(url,UnityWebRequest.kHttpVerbPUT,sendData);
 
-			yield return requester.Send ();
+			yield return requester.SendWebRequest();
 
 			ResponseProcess (requester);
 		}

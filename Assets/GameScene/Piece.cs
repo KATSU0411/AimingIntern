@@ -136,6 +136,7 @@ public class Piece : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
     public void OnBeginDrag(PointerEventData e)
     {
         if (info.kind == "unknown") return;
+        if (UserInfo.flg_spectator) return;
         if (UserInfo.game_status == "finished" || UserInfo.game_status == "exited") return;
         CreateDragObject();
         draggingObject.transform.position = e.position;
@@ -144,12 +145,14 @@ public class Piece : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
     public void OnDrag(PointerEventData e)
     {
         if (info.kind == "unknown") return;
+        if (UserInfo.flg_spectator) return;
         if (UserInfo.game_status == "finished" || UserInfo.game_status == "exited") return;
         draggingObject.transform.position = e.position;
     }
     public void OnEndDrag(PointerEventData e)
     {
         if (info.kind == "unknown") return;
+        if (UserInfo.flg_spectator) return;
         if (UserInfo.game_status == "finished" || UserInfo.game_status == "exited") return;
         gameObject.GetComponent<Image>().color = Vector4.one;
         Destroy(draggingObject);
@@ -176,7 +179,7 @@ public class Piece : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
     // ------------------------------------------------
     // コマの移動の可否
     // ------------------------------------------------
-    private bool CanMove(Vector2 pos)
+    public bool CanMove(Vector2 pos)
     {
         int x = (int)pos.x;
         int y = (int)pos.y;
@@ -236,6 +239,7 @@ public class Piece : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
     {
         if (info.kind == "unknown") return;
         if (UserInfo.game_status != "preparing") return;
+        if (UserInfo.flg_spectator) return;
         if (e.pointerDrag == null) return;
         if (e.pointerDrag == this.gameObject) return;
         this.gameObject.transform.Find("Image").GetComponent<Image>()
@@ -244,6 +248,7 @@ public class Piece : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
     public void OnPointerExit(PointerEventData e)
     {
         if (info.kind == "unknown") return;
+        if (UserInfo.flg_spectator) return;
         if (UserInfo.game_status != "preparing") return;
         this.gameObject.transform.Find("Image").GetComponent<Image>()
                                         .color = Vector4.zero;

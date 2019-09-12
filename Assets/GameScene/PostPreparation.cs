@@ -32,26 +32,6 @@ public class PostPreparation : MonoBehaviour
     }
 
     // ------------------------------------------------
-    // 盤のコマ情報取得
-    // ------------------------------------------------
-    private List<PieceInfo> GetPieceInfo()
-    {
-        List<PieceInfo> pieces = new List<PieceInfo>();
-        GameObject field = GameObject.Find("Canvas/Panel/Image_field/Panel_piece");
-        foreach (Transform piece in field.transform)
-        {
-            PieceInfo pi = new PieceInfo();
-            Piece p = piece.GetComponent<Piece>();
-            if (p == null) continue;
-            pi = p.info;
-
-            pieces.Add(pi);
-        }
-
-        return pieces;
-    }
-
-    // ------------------------------------------------
     // コマの初期情報送信
     // ------------------------------------------------
     void PostInitPieces()
@@ -62,7 +42,7 @@ public class PostPreparation : MonoBehaviour
         param.game_id = UserInfo.game_id;
         param.piece_preparations = new List<PiecePreparationInfo>();
 
-        var pieces = GetPieceInfo();
+        var pieces = Utility.GetPieceInfo();
         foreach(var piece in pieces)
         {
             PiecePreparationInfo info = new PiecePreparationInfo();

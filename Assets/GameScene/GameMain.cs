@@ -49,7 +49,6 @@ public class GameMain : MonoBehaviour
         field_rect = field.GetComponent<RectTransform>();
         Pieces = new GameObject[PIECE_NUM];
         waiting = GameObject.Find("Canvas/Panel/Image_wait");
-        if (UserInfo.flg_spectator) waiting.SetActive(false);
         GameObject.Find("Canvas/Panel/Button").SetActive(false);
 
         my_case = GameObject.Find("Canvas/Panel/Image_case_my/Panel").GetComponent<RectTransform>();
@@ -61,6 +60,12 @@ public class GameMain : MonoBehaviour
         win_panel.SetActive(false);
         lose_panel.SetActive(false);
 
+        UserInfo.game_user_id = UserInfo.user_id;
+
+        if (UserInfo.flg_spectator)
+        {
+            waiting.SetActive(false);
+        }
 
         GetRoomInfo();
         // Debug
@@ -119,6 +124,11 @@ public class GameMain : MonoBehaviour
         {
             var obj = SetPiece(pieces[i]);
             Pieces[i] = obj;
+
+            if(pieces[i].owner_user_id != UserInfo.game_user_id)
+            {
+                obj.GetComponent<RectTransform>().rotation = Quaternion.Euler(0, 0, 180);
+            }
         }
 
     }
@@ -138,6 +148,17 @@ public class GameMain : MonoBehaviour
     }
     private GameObject SetPiece(PieceInfo info)
     {
+        if (info.captured)
+        {
+            if(info.owner_user_id == UserInfo.game_user_id)
+            {
+                return SetPiece(info, enemy_case);
+            }
+            else
+            {
+                return SetPiece(info, my_case);
+            }
+        }
         return SetPiece(info, field_rect);
     }
     private GameObject SetPiece(PieceInfo info, RectTransform parent)
@@ -184,7 +205,7 @@ public class GameMain : MonoBehaviour
             if(Pieces[i].GetComponent<Piece>().info.captured != response.pieces[i].captured)
             {
                 Destroy(Pieces[i]);
-                if(response.pieces[i].owner_user_id == UserInfo.user_id)
+                if(response.pieces[i].owner_user_id == UserInfo.game_user_id)
                 {
                     Pieces[i] = SetPiece(response.pieces[i], enemy_case);
                 }
@@ -213,13 +234,15 @@ public class GameMain : MonoBehaviour
     public void ResponseShowGame(ResponseShowGame response)
     {
         UserInfo.game_status = response.status;
+        if (UserInfo.flg_spectator) UserInfo.game_user_id = response.first_mover_user_id;
 
         // 終了処理
         if(response.status == "finished")
         {
             waiting.SetActive(false);
+            if (UserInfo.flg_spectator) return;
 
-            if(response.winner_user_id == UserInfo.user_id)
+            if(response.winner_user_id == UserInfo.game_user_id)
             {
                 win_panel.SetActive(true);
             }
@@ -233,7 +256,7 @@ public class GameMain : MonoBehaviour
         if(response.status == "exited")
         {
             waiting.SetActive(false);
-            if(response.winner_user_id == UserInfo.user_id)
+            if(response.winner_user_id == UserInfo.game_user_id)
             {
                 win_panel.SetActive(true);
             }
@@ -241,7 +264,7 @@ public class GameMain : MonoBehaviour
 
 
         // 先手後手格納
-        if (response.first_mover_user_id == UserInfo.user_id)
+        if (response.first_mover_user_id == UserInfo.game_user_id)
         {
             m_flgFirst = true;
         }
@@ -254,7 +277,7 @@ public class GameMain : MonoBehaviour
         {
             m_flgMatched = true;
             waiting.SetActive(false);
-            GameObject.Find("Canvas/Panel/Button").SetActive(true);
+            if(!UserInfo.flg_spectator) GameObject.Find("Canvas/Panel/Button").SetActive(true);
             InitPieces();
         }
 
@@ -314,6 +337,7 @@ public class GameMain : MonoBehaviour
     {
         // 情報保持
         UserInfo.game_id = response.game_id;
+
 
         if (response.status == "playing" && !m_flgMatched)
         {
