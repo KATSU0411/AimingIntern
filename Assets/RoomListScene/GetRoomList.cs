@@ -69,6 +69,7 @@ public class GetRoomList : MonoBehaviour
 
             //各子要素の設定
             GameObject button_join = panel.transform.Find("Button_Join").gameObject;
+            GameObject button_spect = panel.transform.Find("Button_Spect").gameObject;
             GameObject text_owner = panel.transform.Find("Text_Owner").gameObject;
             GameObject text_status = panel.transform.Find("Text_Status").gameObject;
 
@@ -80,6 +81,9 @@ public class GetRoomList : MonoBehaviour
 
             // 入場機能
             button_join.GetComponent<Button>().onClick.AddListener(() => JoinRoom(room.room_id));
+
+            // 観戦機能
+            button_spect.GetComponent<Button>().onClick.AddListener(() => JoinSpectatorRoom(room.room_id));
         }
     }
 
@@ -99,6 +103,29 @@ public class GetRoomList : MonoBehaviour
         // 情報保持
         UserInfo.room_id = response.room_id;
         UserInfo.player_entory_id = response.player_entry_id;
+        UserInfo.flg_spectator = false;
+
+        // Gameシーン切り替え
+        SceneManager.LoadScene("GameScene");
+    }
+
+    // ----------------------------------------------------
+    // ルームに観戦者として入る
+    // ----------------------------------------------------
+    public void JoinSpectatorRoom(int room_id)
+    {
+        ApiClient.Instance.ResponseCreateSpectatorEntry = ResponseCreateSpectatorEntry;
+        var param = new RequestCreateSpectatorEntry();
+        param.room_id = room_id;
+        UserInfo.room_id = room_id;
+        ApiClient.Instance.RequestCreateSpectatorEntry(param);
+    }
+
+    public void ResponseCreateSpectatorEntry(ResponseCreateSpectatorEntry response)
+    {
+        // 情報保持
+        UserInfo.player_entory_id = response.spectator_entry_id;
+        UserInfo.flg_spectator = true;
 
         // Gameシーン切り替え
         SceneManager.LoadScene("GameScene");

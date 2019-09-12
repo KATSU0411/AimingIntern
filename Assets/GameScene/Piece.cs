@@ -109,8 +109,8 @@ public class Piece : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
     // フィールドの座標をUIの座標に変換
     private Vector2 Field2UI(int x, int y)
     {
-        if (flgFirst) return new Vector2(PIECE_SIZE * (x - 1), PIECE_SIZE * (y - 1));
-        else return new Vector2(PIECE_SIZE * (7 - x - 1), PIECE_SIZE * (7 - y - 1));
+        if (flgFirst) return new Vector2(PIECE_SIZE * (x - 1 + 0.5f), PIECE_SIZE * (y - 1 + 0.5f));
+        else return new Vector2(PIECE_SIZE * (7 - x - 0.5f), PIECE_SIZE * (7 - y - 0.5f));
     }
 
     // マウス座標をフィールド座標に変換

@@ -28,7 +28,7 @@ public class SetGotPieces : MonoBehaviour
         {
             foreach (Transform piece in pieces)
             {
-                piece.GetComponent<RectTransform>().localPosition = new Vector2(SIZE_W * (cnt % 4), SIZE_H * (cnt / 4));
+                piece.GetComponent<RectTransform>().localPosition = new Vector2(SIZE_W * (cnt % 4 + 0.5f), SIZE_H * (cnt / 4 + 0.5f));
                 cnt++;
             }
             childcnt = this.transform.childCount;

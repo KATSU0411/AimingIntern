@@ -24,13 +24,32 @@ public class RoomExit : MonoBehaviour
     // ルームから退出
     public void OnClick()
     {
-        ApiClient.Instance.ResponseDeletePlayerEntry = ResponseDeletePlayerEntry;
-        var param = new RequestDeletePlayerEntry();
-        param.player_entry_id = UserInfo.player_entory_id;
-        ApiClient.Instance.RequestDeletePlayerEntry(param);
+        if (!UserInfo.flg_spectator)
+        {
+            ApiClient.Instance.ResponseDeletePlayerEntry = ResponseDeletePlayerEntry;
+            var param = new RequestDeletePlayerEntry();
+            param.player_entry_id = UserInfo.player_entory_id;
+            ApiClient.Instance.RequestDeletePlayerEntry(param);
+        }
+        else
+        {
+            ApiClient.Instance.ResponseDeleteSpectatorEntry = ResponseDeleteSpectatorEntry;
+            var param = new RequestDeleteSpectatorEntry();
+            param.spectator_entry_id = UserInfo.player_entory_id;
+            ApiClient.Instance.RequestDeleteSpectatorEntry(param);
+        }
     }
 
     public void ResponseDeletePlayerEntry(ResponseDeletePlayerEntry response)
+    {
+        UserInfo.game_status = null;
+        UserInfo.flg_turn = false;
+
+
+        // シーン切り替え
+        SceneManager.LoadScene("RoomListScene");
+    }
+    public void ResponseDeleteSpectatorEntry(ResponseDeleteSpectatorEntry response)
     {
         UserInfo.game_status = null;
         UserInfo.flg_turn = false;

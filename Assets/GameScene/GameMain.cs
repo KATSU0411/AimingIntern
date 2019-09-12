@@ -31,6 +31,7 @@ public class GameMain : MonoBehaviour
     private bool m_flgFirst;
 
     private const int PIECE_NUM = 16;
+    private int m_turn = 0;
 
     // Use this for initialization
     void Start()
@@ -40,6 +41,7 @@ public class GameMain : MonoBehaviour
         m_flgStart = false;
         m_flgFirst = false;
         m_time_elapsed = 0;
+        m_turn = 0;
         GoodPiece = (GameObject)Resources.Load("GoodPrefab");
         EvilPiece = (GameObject)Resources.Load("EvilPrefab");
         UnknownPiece = (GameObject)Resources.Load("UnknownPrefab");
@@ -47,6 +49,7 @@ public class GameMain : MonoBehaviour
         field_rect = field.GetComponent<RectTransform>();
         Pieces = new GameObject[PIECE_NUM];
         waiting = GameObject.Find("Canvas/Panel/Image_wait");
+        if (UserInfo.flg_spectator) waiting.SetActive(false);
         GameObject.Find("Canvas/Panel/Button").SetActive(false);
 
         my_case = GameObject.Find("Canvas/Panel/Image_case_my/Panel").GetComponent<RectTransform>();
@@ -253,7 +256,6 @@ public class GameMain : MonoBehaviour
             waiting.SetActive(false);
             GameObject.Find("Canvas/Panel/Button").SetActive(true);
             InitPieces();
-            return;
         }
 
         if (response.status == "playing")
@@ -263,24 +265,16 @@ public class GameMain : MonoBehaviour
                 GetPiecesInfo();
                 return;
             }
-            // 自ターンか判定
-            if (response.turn_mover_user_id == UserInfo.user_id)
+
+            if(m_turn != response.turn_count)
             {
-                if (!UserInfo.flg_turn)
-                {
-                    UserInfo.flg_turn = true;
-                    waiting.SetActive(false);
-                    GetPiecesInfo();
-                }
-            }
-            else
-            {
-                if (UserInfo.flg_turn)
-                {
-                    UserInfo.flg_turn = false;
-                    waiting.SetActive(true);
-                    GetPiecesInfo();
-                }
+                m_turn = response.turn_count;
+                if (UserInfo.flg_spectator) return;
+                if (m_turn == 1) UserInfo.flg_turn = m_flgFirst;
+                else UserInfo.flg_turn = !UserInfo.flg_turn;
+
+                waiting.SetActive(!UserInfo.flg_turn);
+                GetPiecesInfo();
             }
         }
     }
