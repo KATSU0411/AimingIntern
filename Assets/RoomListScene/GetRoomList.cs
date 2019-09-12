@@ -64,7 +64,7 @@ public class GetRoomList : MonoBehaviour
             if (filter == 1 && room.status != "playing") continue;
             if (filter == 2 && room.status != "waiting") continue;
             //RoomPanel
-            GameObject panel = Instantiate(RoomPanel);
+            GameObject panel = Instantiate(RoomPanel, content);
 
 
             //各子要素の設定
@@ -80,9 +80,6 @@ public class GetRoomList : MonoBehaviour
 
             // 入場機能
             button_join.GetComponent<Button>().onClick.AddListener(() => JoinRoom(room.room_id));
-
-            //ボタンをContentの子に設定
-            panel.transform.SetParent(content, false);
         }
     }
 

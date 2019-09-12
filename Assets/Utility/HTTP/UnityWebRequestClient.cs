@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using UnityEngine.Networking;
 using UnityEngine.Events;
@@ -15,9 +16,11 @@ namespace Network{
 
 		public UnityAction<DownloadHandler> onDone = null;
 		public UnityAction<UnityWebRequest> onFail = null;
+        private GameObject ErrorPanel;
 
 		public UnityWebRequestClient(MonoBehaviour mb){
 			monoBehaviour = mb;
+            ErrorPanel = (GameObject)Resources.Load("ErrorPanel");
 		}
 
 		public void SetAccessToken(string token){
@@ -54,6 +57,10 @@ namespace Network{
 					var error = JsonUtility.FromJson<Protocol.Error> (requester.downloadHandler.text);
 					Debug.Log("通信のエラー処理をしたいときはここに追加してね！");
 					Debug.LogError( error.message );
+
+                    var obj = MonoBehaviour.Instantiate(ErrorPanel, GameObject.Find("Canvas/Panel").GetComponent<RectTransform>());
+                    obj.transform.Find("Text").GetComponent<Text>().text = error.message;
+
 				}catch(System.ArgumentException e) {
 					Debug.LogError ("IPアドレスが設定されていないかも？ ApiClient.Instance.SetIpAddress(string ipAddress)にIPアドレスを設定してね！\n" + e.Message);
 				}
