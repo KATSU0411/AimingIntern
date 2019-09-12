@@ -13,6 +13,7 @@ public class Piece : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
 
     private GameObject draggingObject;
     private Transform canvasTran;
+    private List<GameObject> Highlights;
 
     public bool flgFirst { set; get; }
     private float PIECE_SIZE;
@@ -28,11 +29,14 @@ public class Piece : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
     void Awake()
     {
         info = new PieceInfo();
+        //UserInfo.game_status = "preparing";
     }
 
     // Use this for initialization
     void Start()
     {
+        Highlights = new List<GameObject>();
+
         canvasTran = GameObject.Find("Canvas/Panel").GetComponent<Transform>();
 
         field = GameObject.Find("Canvas/Panel/Image_field/Panel_piece");
@@ -44,13 +48,62 @@ public class Piece : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
         CANVAS_SCALE = GameObject.Find("Canvas").GetComponent<RectTransform>().localScale.x;
 
         this.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(PIECE_SIZE, PIECE_SIZE);
-
+        SetHighlight();
     }
 
     // Update is called once per frame
     void Update()
     {
-        this.gameObject.GetComponent<RectTransform>().localPosition = Field2UI(info.point_x, info.point_y);
+        if (!info.captured)
+        {
+            this.gameObject.GetComponent<RectTransform>().localPosition = Field2UI(info.point_x, info.point_y);
+        }
+    }
+
+    // ------------------------------------------------
+    // 移動可能範囲を示すハイライトオブジェクトの追加
+    // ------------------------------------------------
+    private void SetHighlight()
+    {
+        GameObject Highlight = (GameObject)Resources.Load("HighlightPrefab");
+        for(int i = 0; i < 4; i++)
+        {
+            GameObject hl = Instantiate(Highlight, this.gameObject.GetComponent<RectTransform>());
+            hl.GetComponent<RectTransform>().sizeDelta = new Vector2(PIECE_SIZE, PIECE_SIZE);
+            Vector2 pos = new Vector2();
+            int sign = flgFirst ? 1 : -1;
+            if (i == 0) pos.y = PIECE_SIZE * sign;
+            else if (i == 1) pos.x = PIECE_SIZE * sign;
+            else if (i == 2) pos.y = -PIECE_SIZE * sign;
+            else if (i == 3) pos.x = -PIECE_SIZE * sign;
+
+            hl.GetComponent<RectTransform>().localPosition = pos;
+
+            Highlights.Add(hl);
+        }
+    }
+
+    private void BeginHighLight()
+    {
+        List<bool> cm = new List<bool>();
+        cm.Add(CanMove(new Vector2(info.point_x, info.point_y + 1)));
+        cm.Add(CanMove(new Vector2(info.point_x + 1, info.point_y)));
+        cm.Add(CanMove(new Vector2(info.point_x, info.point_y - 1)));
+        cm.Add(CanMove(new Vector2(info.point_x - 1, info.point_y)));
+
+
+        for(int i = 0; i < 4; i++)
+        {
+            if (!cm[i]) continue;
+            Highlights[i].GetComponent<Image>().color = new Vector4(1, 1, 0, 0.2f);
+        }
+    }
+    private void EndHighLight()
+    {
+        foreach(GameObject obj in Highlights)
+        {
+            obj.GetComponent<Image>().color = Vector4.zero;
+        }
     }
 
     // フィールドの座標をUIの座標に変換
@@ -72,7 +125,9 @@ public class Piece : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
         y /= CANVAS_SCALE;
 
 
-        Vector2 pos = new Vector2((int)(x / PIECE_SIZE) + 1, (int)(y / PIECE_SIZE) + 1);
+        Vector2 pos = new Vector2((int)(x / PIECE_SIZE) + (1), (int)(y / PIECE_SIZE) + (1));
+        if (x <= 0) pos.x -= 1;
+        if (y <= 0) pos.y -= 1;
         if (flgFirst) return pos;
         else return new Vector2(7 - pos.x, 7 - pos.y);
     }
@@ -81,19 +136,24 @@ public class Piece : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
     public void OnBeginDrag(PointerEventData e)
     {
         if (info.kind == "unknown") return;
+        if (UserInfo.game_status == "finished" || UserInfo.game_status == "exited") return;
         CreateDragObject();
         draggingObject.transform.position = e.position;
+        if (UserInfo.flg_turn) BeginHighLight();
     }
     public void OnDrag(PointerEventData e)
     {
         if (info.kind == "unknown") return;
+        if (UserInfo.game_status == "finished" || UserInfo.game_status == "exited") return;
         draggingObject.transform.position = e.position;
     }
     public void OnEndDrag(PointerEventData e)
     {
         if (info.kind == "unknown") return;
+        if (UserInfo.game_status == "finished" || UserInfo.game_status == "exited") return;
         gameObject.GetComponent<Image>().color = Vector4.one;
         Destroy(draggingObject);
+        EndHighLight();
 
         var pos = Mouse2Field(e);
 
@@ -103,8 +163,10 @@ public class Piece : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
         }
         else if (UserInfo.flg_turn)
         {
-            if (MovePiece(Mouse2Field(e)))
+            if (CanMove(pos))
             {
+                info.point_x = (int)pos.x;
+                info.point_y = (int)pos.y;
                 UpdatePieceInfo();
             }
         }
@@ -112,16 +174,16 @@ public class Piece : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
 
 
     // ------------------------------------------------
-    // コマの移動
+    // コマの移動の可否
     // ------------------------------------------------
-    private bool MovePiece(Vector2 pos)
+    private bool CanMove(Vector2 pos)
     {
         int x = (int)pos.x;
         int y = (int)pos.y;
         if (y < 1 || y > 6) return false;
         if (x < 0 || x > 7) return false;
-        if (flgFirst) { if (((x == 0 || x == 7) && (y != 6))) return false; }
-        else { if (((x == 0 || x == 7) && (y != 1))) return false; }
+        if (flgFirst) { if (((x == 0 || x == 7) && (y != 6 || info.kind != "good"))) return false; }
+        else { if (((x == 0 || x == 7) && (y != 1 || info.kind != "good"))) return false; }
 
         PieceInfo dstinfo = field.GetComponent<GameMain>().isPiece(x, y);
         if (dstinfo != null && dstinfo.owner_user_id == UserInfo.user_id) return false;
@@ -129,18 +191,17 @@ public class Piece : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
         if (x == info.point_x)
         {
             if (Math.Abs(y - info.point_y) != 1) return false;
-            info.point_y = y;
             return true;
         }
         else if (y == info.point_y)
         {
             if (Math.Abs(x - info.point_x) != 1) return false;
-            info.point_x = x;
             return true;
         }
 
         return false;
     }
+
 
     // ------------------------------------------------
     // 初期配置フェーズのコマのスワップ
@@ -157,10 +218,14 @@ public class Piece : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
             {
                 // ドラッグ先と位置を交換
                 Piece swapper = obj.gameObject.GetComponent<Piece>();
-                PieceInfo tmp;
-                tmp = swapper.info;
-                swapper.info = info;
-                info = tmp;
+                int tmp;
+                tmp = swapper.info.point_x;
+                swapper.info.point_x = info.point_x;
+                info.point_x = tmp;
+
+                tmp = swapper.info.point_y;
+                swapper.info.point_y = info.point_y;
+                info.point_y = tmp;
             }
         }
     }

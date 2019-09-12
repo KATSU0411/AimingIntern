@@ -23,6 +23,9 @@ public class GameMain : MonoBehaviour
     private RectTransform enemy_case;
     private GameObject waiting;
 
+    private GameObject win_panel;
+    private GameObject lose_panel;
+
     private GameObject[] Pieces;
 
     private bool m_flgFirst;
@@ -46,8 +49,14 @@ public class GameMain : MonoBehaviour
         waiting = GameObject.Find("Canvas/Panel/Image_wait");
         GameObject.Find("Canvas/Panel/Button").SetActive(false);
 
-        my_case = GameObject.Find("Canvas/Panel/Image_case_my").GetComponent<RectTransform>();
-        enemy_case = GameObject.Find("Canvas/Panel/Image_case_en").GetComponent<RectTransform>();
+        my_case = GameObject.Find("Canvas/Panel/Image_case_my/Panel").GetComponent<RectTransform>();
+        enemy_case = GameObject.Find("Canvas/Panel/Image_case_en/Panel").GetComponent<RectTransform>();
+
+        win_panel = GameObject.Find("Canvas/Panel/Image_Win");
+        lose_panel = GameObject.Find("Canvas/Panel/Image_Lose");
+
+        win_panel.SetActive(false);
+        lose_panel.SetActive(false);
 
 
         GetRoomInfo();
@@ -62,10 +71,16 @@ public class GameMain : MonoBehaviour
         m_time_elapsed += Time.deltaTime;
         if (m_time_elapsed >= 2)
         {
+            if(UserInfo.game_status == "finished" || UserInfo.game_status == "exited")
+            {
+                // ゲームが終わって2秒経過でルーム一覧へ戻る
+                GameObject.Find("Canvas/Panel/Button_exit").GetComponent<RoomExit>().OnClick();
+            }
             if (!m_flgMatched) GetRoomInfo();
             else GetGameInfo();
             m_time_elapsed = 0;
         }
+
     }
 
     // ------------------------------------------------
@@ -82,8 +97,8 @@ public class GameMain : MonoBehaviour
             }
             else
             {
-                SetPiece("good", i + 2, 5);
-                SetPiece("evil", i + 2, 6);
+                SetPiece("good", i + 2, 6);
+                SetPiece("evil", i + 2, 5);
             }
         }
     }
@@ -194,6 +209,34 @@ public class GameMain : MonoBehaviour
     }
     public void ResponseShowGame(ResponseShowGame response)
     {
+        UserInfo.game_status = response.status;
+
+        // 終了処理
+        if(response.status == "finished")
+        {
+            waiting.SetActive(false);
+
+            if(response.winner_user_id == UserInfo.user_id)
+            {
+                win_panel.SetActive(true);
+            }
+            else
+            {
+                lose_panel.SetActive(true);
+            }
+            return;
+        }
+
+        if(response.status == "exited")
+        {
+            waiting.SetActive(false);
+            if(response.winner_user_id == UserInfo.user_id)
+            {
+                win_panel.SetActive(true);
+            }
+        }
+
+
         // 先手後手格納
         if (response.first_mover_user_id == UserInfo.user_id)
         {
@@ -203,6 +246,7 @@ public class GameMain : MonoBehaviour
         {
             m_flgFirst = false;
         }
+
         if (!m_flgMatched)
         {
             m_flgMatched = true;
@@ -212,7 +256,6 @@ public class GameMain : MonoBehaviour
             return;
         }
 
-        UserInfo.game_status = response.status;
         if (response.status == "playing")
         {
             if (!m_flgStart)
