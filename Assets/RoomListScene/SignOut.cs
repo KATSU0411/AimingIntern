@@ -30,8 +30,6 @@ public class SignOut : MonoBehaviour
 
     public void ResponseDeleteUserSession(ResponseDeleteUserSession response)
     {
-        Debug.Log("sign out");
-
         // Topシーンに切り替え
         SceneManager.LoadScene("TopScene");
     }

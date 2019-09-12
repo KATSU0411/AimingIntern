@@ -95,8 +95,6 @@ public class Top : MonoBehaviour
     // ----------------------------------------------------
     public void ResponseCreateUserSession(ResponseCreateUserSession response)
     {
-        Debug.Log("Success");
-
         // トークンをセット
         ApiClient.Instance.SetAccessToken(response.access_token);
 
