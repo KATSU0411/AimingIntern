@@ -11,18 +11,16 @@ public class Utility {
     // ------------------------------------------------
     // 盤のコマ情報取得
     // ------------------------------------------------
-    public static List<PieceInfo> GetPieceInfo()
+    public static List<GameObject> GetPieceInfo()
     {
-        List<PieceInfo> pieces = new List<PieceInfo>();
+        List<GameObject> pieces = new List<GameObject>();
         GameObject field = GameObject.Find("Canvas/Panel/Image_field/Panel_piece");
         foreach (Transform piece in field.transform)
         {
-            PieceInfo pi = new PieceInfo();
             Piece p = piece.GetComponent<Piece>();
             if (p == null) continue;
-            pi = p.info;
 
-            pieces.Add(pi);
+            pieces.Add(piece.gameObject);
         }
         return pieces;
     }

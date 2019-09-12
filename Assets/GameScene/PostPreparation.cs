@@ -15,7 +15,6 @@ public class PostPreparation : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-
         button = this.gameObject.GetComponent<Button>();
         button.onClick.AddListener(OnPointerClick);
     }
@@ -46,9 +45,10 @@ public class PostPreparation : MonoBehaviour
         foreach(var piece in pieces)
         {
             PiecePreparationInfo info = new PiecePreparationInfo();
-            info.point_y = piece.point_y;
-            info.point_x = piece.point_x;
-            info.kind = piece.kind;
+            PieceInfo p = piece.GetComponent<Piece>().info;
+            info.point_y = p.point_y;
+            info.point_x = p.point_x;
+            info.kind = p.kind;
 
             param.piece_preparations.Add(info);
         }

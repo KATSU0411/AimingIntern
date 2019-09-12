@@ -166,15 +166,28 @@ public class Piece : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
         }
         else if (UserInfo.flg_turn)
         {
-            if (CanMove(pos))
-            {
-                info.point_x = (int)pos.x;
-                info.point_y = (int)pos.y;
-                UpdatePieceInfo();
-            }
+            Move(pos);
         }
     }
 
+    // ------------------------------------------------
+    // コマの移動
+    // ------------------------------------------------
+    public void Move(Vector2 pos)
+    {
+        int x = (int)pos.x;
+        int y = (int)pos.y;
+        Move(x, y);
+    }
+    public void Move(int x, int y)
+    {
+        if (CanMove(x, y))
+        {
+            info.point_x = x;
+            info.point_y = y;
+            UpdatePieceInfo();
+        }
+    }
 
     // ------------------------------------------------
     // コマの移動の可否
@@ -183,6 +196,10 @@ public class Piece : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
     {
         int x = (int)pos.x;
         int y = (int)pos.y;
+        return CanMove(x, y);
+    }
+    public bool CanMove(int x, int y)
+    {
         if (y < 1 || y > 6) return false;
         if (x < 0 || x > 7) return false;
         if (flgFirst) { if (((x == 0 || x == 7) && (y != 6 || info.kind != "good"))) return false; }
