@@ -23,7 +23,6 @@ public class SignOut : MonoBehaviour
     {
         var session = new RequestDeleteUserSession();
         session.user_session_id = UserInfo.user_session_id;
-        // 登録
         ApiClient.Instance.ResponseDeleteUserSession = ResponseDeleteUserSession;
         ApiClient.Instance.RequestDeleteUserSession(session);
     }

@@ -198,7 +198,7 @@ GameObject:
   - component: {fileID: 378890806}
   - component: {fileID: 378890805}
   - component: {fileID: 378890804}
-  - component: {fileID: 378890807}
+  - component: {fileID: 378890808}
   m_Layer: 5
   m_Name: Button_Signin
   m_TagString: Untagged
@@ -263,18 +263,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 378890805}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 378890807}
-        m_MethodName: SignInOnClick
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &378890805
@@ -310,7 +299,7 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 378890802}
---- !u!114 &378890807
+--- !u!114 &378890808
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -318,7 +307,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 378890802}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e64cf86977b3b064ca8c68ef9fdbdd38, type: 3}
+  m_Script: {fileID: 11500000, guid: b87a8a87888cc2b40bc6d35f9837d907, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &411555483
@@ -1564,7 +1553,7 @@ GameObject:
   - component: {fileID: 1316201188}
   - component: {fileID: 1316201187}
   - component: {fileID: 1316201186}
-  - component: {fileID: 1316201185}
+  - component: {fileID: 1316201189}
   m_Layer: 5
   m_Name: Button_Signup
   m_TagString: Untagged
@@ -1591,17 +1580,6 @@ RectTransform:
   m_AnchoredPosition: {x: 116, y: -240.8}
   m_SizeDelta: {x: 190.5, y: 82.3}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1316201185
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1316201183}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e64cf86977b3b064ca8c68ef9fdbdd38, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1316201186
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1640,18 +1618,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1316201187}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1316201185}
-        m_MethodName: SignUpOnClick
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &1316201187
@@ -1687,6 +1654,17 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1316201183}
+--- !u!114 &1316201189
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1316201183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 030fc5b7e41866c4694980002f369cf0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1750720897
 GameObject:
   m_ObjectHideFlags: 0

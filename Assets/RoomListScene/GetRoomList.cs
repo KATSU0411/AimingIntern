@@ -80,54 +80,10 @@ public class GetRoomList : MonoBehaviour
             button_join.GetComponent<Button>().interactable = (room.status == "waiting" ? true : false);
 
             // 入場機能
-            button_join.GetComponent<Button>().onClick.AddListener(() => JoinRoom(room.room_id));
+            button_join.GetComponent<JoinRoom>().room_id = room.room_id;
 
             // 観戦機能
-            button_spect.GetComponent<Button>().onClick.AddListener(() => JoinSpectatorRoom(room.room_id));
+            button_spect.GetComponent<JoinSpectatorRoom>().room_id = room.room_id;
         }
-    }
-
-    // ----------------------------------------------------
-    // ルームに入る
-    // ----------------------------------------------------
-    public void JoinRoom(int room_id)
-    {
-        ApiClient.Instance.ResponseCreatePlayerEntry = ResponseCreatePlayerEntry;
-        var param = new RequestCreatePlayerEntry();
-        param.room_id = room_id;
-        ApiClient.Instance.RequestCreatePlayerEntry(param);
-    }
-
-    public void ResponseCreatePlayerEntry(ResponseCreatePlayerEntry response)
-    {
-        // 情報保持
-        UserInfo.room_id = response.room_id;
-        UserInfo.player_entory_id = response.player_entry_id;
-        UserInfo.flg_spectator = false;
-
-        // Gameシーン切り替え
-        SceneManager.LoadScene("GameScene");
-    }
-
-    // ----------------------------------------------------
-    // ルームに観戦者として入る
-    // ----------------------------------------------------
-    public void JoinSpectatorRoom(int room_id)
-    {
-        ApiClient.Instance.ResponseCreateSpectatorEntry = ResponseCreateSpectatorEntry;
-        var param = new RequestCreateSpectatorEntry();
-        param.room_id = room_id;
-        UserInfo.room_id = room_id;
-        ApiClient.Instance.RequestCreateSpectatorEntry(param);
-    }
-
-    public void ResponseCreateSpectatorEntry(ResponseCreateSpectatorEntry response)
-    {
-        // 情報保持
-        UserInfo.player_entory_id = response.spectator_entry_id;
-        UserInfo.flg_spectator = true;
-
-        // Gameシーン切り替え
-        SceneManager.LoadScene("GameScene");
     }
 }

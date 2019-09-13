@@ -40,6 +40,7 @@ GameObject:
   - component: {fileID: 222070907309694546}
   - component: {fileID: 114093054962993566}
   - component: {fileID: 114673985136887242}
+  - component: {fileID: 114609976703487872}
   m_Layer: 0
   m_Name: Button_Spect
   m_TagString: Untagged
@@ -92,6 +93,7 @@ GameObject:
   - component: {fileID: 222892765719057908}
   - component: {fileID: 114739591826245474}
   - component: {fileID: 114333229253764394}
+  - component: {fileID: 114643018316162228}
   m_Layer: 0
   m_Name: Button_Join
   m_TagString: Untagged
@@ -246,6 +248,30 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114609976703487872
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1548717181075896}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a408845fb43d42b44a4f467814b8d5e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  room_id: 0
+--- !u!114 &114643018316162228
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1977660338274658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb62c99bd4506b24d93f9138f121e505, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  room_id: 0
 --- !u!114 &114673985136887242
 MonoBehaviour:
   m_ObjectHideFlags: 1
