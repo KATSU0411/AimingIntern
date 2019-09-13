@@ -11,6 +11,6 @@ public class Rotate : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+        this.gameObject.GetComponent<RectTransform>().Rotate(0, 0, 6);
 	}
 }

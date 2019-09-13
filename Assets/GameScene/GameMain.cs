@@ -355,5 +355,4 @@ public class GameMain : MonoBehaviour
             GetGameInfo();
         }
     }
-
 }

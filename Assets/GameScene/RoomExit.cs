@@ -58,4 +58,10 @@ public class RoomExit : MonoBehaviour
         // シーン切り替え
         SceneManager.LoadScene("RoomListScene");
     }
+
+
+    private void OnApplicationQuit()
+    {
+        OnClick();
+    }
 }
