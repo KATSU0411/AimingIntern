@@ -38,7 +38,6 @@ public class GameMain : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-
         m_flgMatched = false;
         m_flgStart = false;
         m_flgFirst = false;
@@ -91,7 +90,6 @@ public class GameMain : MonoBehaviour
             else GetGameInfo();
             m_time_elapsed = 0;
         }
-
     }
 
     // ------------------------------------------------
@@ -308,7 +306,6 @@ public class GameMain : MonoBehaviour
                 UserInfo.flg_turn = (response.turn_mover_user_id == UserInfo.game_user_id);
                 if (UserInfo.flg_spectator) return;
                 waiting.SetActive(!UserInfo.flg_turn);
-
             }
         }
     }
@@ -348,7 +345,6 @@ public class GameMain : MonoBehaviour
     {
         // 情報保持
         UserInfo.game_id = response.game_id;
-
 
         if (response.status == "playing" && !m_flgMatched)
         {
