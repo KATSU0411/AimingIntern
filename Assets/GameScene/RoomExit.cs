@@ -45,7 +45,6 @@ public class RoomExit : MonoBehaviour
         UserInfo.game_status = null;
         UserInfo.flg_turn = false;
 
-
         // シーン切り替え
         SceneManager.LoadScene("RoomListScene");
     }
@@ -53,7 +52,7 @@ public class RoomExit : MonoBehaviour
     {
         UserInfo.game_status = null;
         UserInfo.flg_turn = false;
-
+        UserInfo.flg_spectator = false;
 
         // シーン切り替え
         SceneManager.LoadScene("RoomListScene");

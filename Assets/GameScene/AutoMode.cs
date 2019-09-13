@@ -36,20 +36,20 @@ public class AutoMode : MonoBehaviour {
         if (!UserInfo.flg_turn) return;
 
         List<Piece> ps = new List<Piece>();
-        foreach(GameObject piece in pieces)
+        foreach (GameObject piece in pieces)
         {
             Piece p = piece.GetComponent<Piece>();
             ps.Add(p);
         }
 
-        while (true)
-        {
+        while (true) {
             Piece p = ps[Random.Range(0, ps.Count)];
             if (p.info.captured || (p.info.owner_user_id != UserInfo.user_id)) continue;
 
             Vector2Int move = new Vector2Int(0, 0);
-            if(p.info.kind == "evil") move = WeightRandomEvil(p.info);
-            else if(p.info.kind == "good") move = WeightRandomGood(p.info);
+
+            if (p.info.kind == "evil") move = WeightRandomEvil(p.info);
+            else if (p.info.kind == "good") move = WeightRandomGood(p.info);
 
             if (!p.flgFirst) move.y *= -1;
 

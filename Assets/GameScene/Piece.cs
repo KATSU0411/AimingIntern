@@ -37,7 +37,7 @@ public class Piece : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
     {
         Highlights = new List<GameObject>();
 
-        canvasTran = GameObject.Find("Canvas/Panel").GetComponent<Transform>();
+        canvasTran = this.gameObject.GetComponent<RectTransform>();
 
         field = GameObject.Find("Canvas/Panel/Image_field/Panel_piece");
         field_rect = field.GetComponent<RectTransform>();
@@ -138,6 +138,8 @@ public class Piece : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
         if (info.kind == "unknown") return;
         if (UserInfo.flg_spectator) return;
         if (UserInfo.game_status == "finished" || UserInfo.game_status == "exited") return;
+        if (UserInfo.game_status == "playing" && !UserInfo.flg_turn) return;
+        this.transform.SetAsLastSibling();
         CreateDragObject();
         draggingObject.transform.position = e.position;
         if (UserInfo.flg_turn) BeginHighLight();
@@ -147,6 +149,7 @@ public class Piece : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
         if (info.kind == "unknown") return;
         if (UserInfo.flg_spectator) return;
         if (UserInfo.game_status == "finished" || UserInfo.game_status == "exited") return;
+        if (UserInfo.game_status == "playing" && !UserInfo.flg_turn) return;
         draggingObject.transform.position = e.position;
     }
     public void OnEndDrag(PointerEventData e)
@@ -154,6 +157,7 @@ public class Piece : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
         if (info.kind == "unknown") return;
         if (UserInfo.flg_spectator) return;
         if (UserInfo.game_status == "finished" || UserInfo.game_status == "exited") return;
+        if (UserInfo.game_status == "playing" && !UserInfo.flg_turn) return;
         gameObject.GetComponent<Image>().color = Vector4.one;
         Destroy(draggingObject);
         EndHighLight();
