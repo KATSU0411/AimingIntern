@@ -28,6 +28,8 @@ public class GameMain : MonoBehaviour
 
     private GameObject[] Pieces;
 
+    private AutoMode auto;
+
     private bool m_flgFirst;
 
     private const int PIECE_NUM = 16;
@@ -49,13 +51,14 @@ public class GameMain : MonoBehaviour
         field_rect = field.GetComponent<RectTransform>();
         Pieces = new GameObject[PIECE_NUM];
         waiting = GameObject.Find("Canvas/Panel/Image_wait");
-        GameObject.Find("Canvas/Panel/Button").SetActive(false);
 
         my_case = GameObject.Find("Canvas/Panel/Image_case_my/Panel").GetComponent<RectTransform>();
         enemy_case = GameObject.Find("Canvas/Panel/Image_case_en/Panel").GetComponent<RectTransform>();
 
         win_panel = GameObject.Find("Canvas/Panel/Image_Win");
         lose_panel = GameObject.Find("Canvas/Panel/Image_Lose");
+
+        auto = GameObject.Find("Canvas/Panel/Toggle_Auto").GetComponent<AutoMode>();
 
         win_panel.SetActive(false);
         lose_panel.SetActive(false);
@@ -219,6 +222,8 @@ public class GameMain : MonoBehaviour
                 Pieces[i].GetComponent<Piece>().info = response.pieces[i];
             }
         }
+
+        if(UserInfo.game_status == "playing") auto.Auto(new List<GameObject>(Pieces));
     }
 
     // ------------------------------------------------
@@ -244,10 +249,12 @@ public class GameMain : MonoBehaviour
 
             if(response.winner_user_id == UserInfo.game_user_id)
             {
+                GetPiecesInfo();
                 win_panel.SetActive(true);
             }
             else
             {
+                GetPiecesInfo();
                 lose_panel.SetActive(true);
             }
             return;
@@ -277,10 +284,15 @@ public class GameMain : MonoBehaviour
         {
             m_flgMatched = true;
             waiting.SetActive(false);
-            if(!UserInfo.flg_spectator) GameObject.Find("Canvas/Panel/Button").SetActive(true);
+            if (!UserInfo.flg_spectator)
+            {
+                GameObject.Find("Canvas/Panel/Button").SetActive(true);
+                GameObject.Find("Canvas/Panel/Button_Shuffle").SetActive(true);
+            }
             InitPieces();
         }
 
+        // ターン進行
         if (response.status == "playing")
         {
             if (!m_flgStart)
@@ -292,12 +304,11 @@ public class GameMain : MonoBehaviour
             if(m_turn != response.turn_count)
             {
                 m_turn = response.turn_count;
-                if (UserInfo.flg_spectator) return;
-                if (m_turn == 1) UserInfo.flg_turn = m_flgFirst;
-                else UserInfo.flg_turn = !UserInfo.flg_turn;
-
-                waiting.SetActive(!UserInfo.flg_turn);
                 GetPiecesInfo();
+                UserInfo.flg_turn = (response.turn_mover_user_id == UserInfo.game_user_id);
+                if (UserInfo.flg_spectator) return;
+                waiting.SetActive(!UserInfo.flg_turn);
+
             }
         }
     }

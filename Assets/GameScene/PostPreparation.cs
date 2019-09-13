@@ -59,6 +59,8 @@ public class PostPreparation : MonoBehaviour
     public void ResponsePrepareGame(ResponsePrepareGame response)
     {
         GameObject.Find("Canvas/Panel/Image_wait").SetActive(true);
+        GameObject.Find("Canvas/Panel/Toggle_Auto").SetActive(true);
+        Destroy(GameObject.Find("Canvas/Panel/Button_Shuffle"));
         Destroy(this.gameObject);
     }
 }

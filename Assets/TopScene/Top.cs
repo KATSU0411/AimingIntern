@@ -66,8 +66,6 @@ public class Top : MonoBehaviour
     // ----------------------------------------------------
     public void ResponseCreateUser(ResponseCreateUser response)
     {
-        Debug.Log("Success");
-
         // 登録後サインイン
         CreateUserSession();
     }

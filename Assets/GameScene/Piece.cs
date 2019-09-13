@@ -202,8 +202,8 @@ public class Piece : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
     {
         if (y < 1 || y > 6) return false;
         if (x < 0 || x > 7) return false;
-        if (flgFirst) { if (((x == 0 || x == 7) && (y != 6 || info.kind != "good"))) return false; }
-        else { if (((x == 0 || x == 7) && (y != 1 || info.kind != "good"))) return false; }
+        if (flgFirst) { if (((x == 0 || x == 7) && (y != 6 || info.kind == "evil"))) return false; }
+        else { if (((x == 0 || x == 7) && (y != 1 || info.kind == "evil"))) return false; }
 
         PieceInfo dstinfo = field.GetComponent<GameMain>().isPiece(x, y);
         if (dstinfo != null && dstinfo.owner_user_id == UserInfo.user_id) return false;
